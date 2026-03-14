@@ -7,7 +7,7 @@ use std::fs;
 use std::path::PathBuf;
 
 #[derive(Parser)]
-#[command(name = "drawer", about = "Render JSON Canvas (.canvas) files to SVG")]
+#[command(name = "drawer", about = "Render JSON Canvas (.canvas) files to SVG", version)]
 struct Cli {
     /// Input .canvas file
     input: PathBuf,
@@ -478,6 +478,12 @@ fn render_node(svg: &mut String, node: &Node, ox: i64, oy: i64) -> Result<()> {
 }
 
 fn main() -> Result<()> {
+    latest::ensure_latest(
+        env!("LATEST_GIT_HASH"),
+        env!("LATEST_SOURCE_HASH"),
+        env!("CARGO_MANIFEST_DIR"),
+    );
+
     let cli = Cli::parse();
 
     let content = fs::read_to_string(&cli.input)
